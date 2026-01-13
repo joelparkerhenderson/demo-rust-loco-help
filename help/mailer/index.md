@@ -15,10 +15,10 @@ For this demo, we prefer an existing personal Fastmail account because it's quic
 Edit `.env/development.env` to add settings:
 
 ```env
-MAILER_HOST="smtp.fastmail.com"
+MAILER_HOST=smtp.fastmail.com
 MAILER_PORT=465
-MAILER_USERNAME="username@example.com"
-MAILER_PASSWORD="a5d02d521833b0b06a196761988a5e24"
+MAILER_USERNAME=username@example.com
+MAILER_PASSWORD=a5d02d521833b0b06a196761988a5e24
 ```
 
 Update:
@@ -29,25 +29,7 @@ source .env/development.env
 
 ## Config
 
-Edit `config/development.yaml` to configure settings:
-
-```yaml
-# Mailer Configuration.
-mailer:
-  # SMTP mailer configuration.
-  smtp:
-    # Enable/Disable smtp mailer.
-    enable: true
-    # SMTP server host. e.g. localhost, smtp.gmail.com
-    host: {{ get_env(name="MAILER_HOST", default="localhost") }}
-    # SMTP server port
-    port: {{ get_env(name="MAILER_PORT", default=0) }}
-    # Use secure connection (SSL/TLS).
-    secure: true
-    auth:
-      user: {{ get_env(name="MAILER_USERNAME", default="mailer_username") }}
-      password: {{ get_env(name="MAILER_PASSWORD", default="mailer_password") }}
-```
+Edit `config/development.yaml` to configure settings based on <config/development-mailer.yml>.
 
 Restart:
 

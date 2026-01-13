@@ -35,11 +35,12 @@ export DB_URL="postgres://demo_rust_loco_owner:secret@localhost:5432/demo_rust_l
 Generate database environment variables:
 
 ```sh
-DB_STEM="demo_rust_loco"
-DB_NAME="${DB_STEM}_development"
-DB_HOST="localhost"
-DB_OWNER_USERNAME="${DB_STEM}_owner"
-DB_OWNER_PASSWORD="$(printf "%s\n" $(LC_ALL=C < /dev/urandom tr -dc '0-9a-f' | head -c32))"
+DB_STEM=demo_rust_loco
+DB_NAME=${DB_STEM}_development
+DB_HOST=localhost
+DB_PORT=5432
+DB_OWNER_USERNAME=${DB_STEM}_owner
+DB_OWNER_PASSWORD=$(printf "%s\n" $(LC_ALL=C < /dev/urandom tr -dc '0-9a-f' | head -c32))
 ```
 
 Save:
@@ -48,12 +49,13 @@ Save:
 echo ".env" >> .gitignore
 mkdir .env
 cat <<- EOF > .env/development.env
-export DB_STEM="$DB_STEM"
-export DB_NAME="$DB_NAME"
-export DB_HOST="$DB_HOST"
-export DB_OWNER_USERNAME="$DB_OWNER_USERNAME"
-export DB_OWNER_PASSWORD="$DB_OWNER_PASSWORD"
-export DB_URL="postgres://$DB_OWNER_USERNAME:$DB_OWNER_PASSWORD@$DB_HOST/$DB_NAME"
+DB_STEM=$DB_STEM
+DB_NAME=$DB_NAME
+DB_HOST=$DB_HOST
+DB_PORT=$DB_PORT
+DB_OWNER_USERNAME=$DB_OWNER_USERNAME
+DB_OWNER_PASSWORD=$DB_OWNER_PASSWORD
+DB_URL=postgres://$DB_OWNER_USERNAME:$DB_OWNER_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
 EOF
 source .env/development.env
 ```
