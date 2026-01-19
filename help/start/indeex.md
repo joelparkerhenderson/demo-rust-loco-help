@@ -3,7 +3,10 @@
 Start the loco app:
 
 ```sh
-$ cargo loco start
+cargo loco start
+```
+
+```stdout
     Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.69s
      Running `target/debug/demo-cli start`
      …
@@ -41,7 +44,7 @@ INFO app: loco_rs::config: loading environment from selected_path="config/develo
 WARN app: loco_rs::boot: pretty backtraces are enabled (this is great for development but has a runtime cost for production. disable with `logger.pretty_backtrace` in your config yaml) environment=development
 ```
 
-If you get this error message about "PgDatabaseError", then it means that your environment variable DB_URL is not connecting to your database correctly, so you'll need to fix either the variable or the your database server or your database connection:
+If you get this error message about "PgDatabaseError", then it means that your environment variable DATABASE_URL is not connecting to your database correctly, so you'll need to fix either the variable or the your database server or your database connection:
 
 ```txt
 Error: DB(Conn(SqlxError(Database(PgDatabaseError { severity: Fatal, code: "28000", message: "role \"loco\" does not exist", detail: None, hint: None, position: None, where: None, schema: None, table: None, column: None, data_type: None, constraint: None, file: Some("miscinit.c"), line: Some(752), routine: Some("InitializeSessionUserId") }))))

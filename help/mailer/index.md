@@ -12,7 +12,7 @@ For this demo, we prefer an existing personal Fastmail account because it's quic
 
 ## Env
 
-Edit `.env/development.env` to add settings:
+Edit `.env` to add settings:
 
 ```env
 MAILER_HOST=smtp.fastmail.com
@@ -24,7 +24,7 @@ MAILER_PASSWORD=a5d02d521833b0b06a196761988a5e24
 Update:
 
 ```sh
-source .env/development.env
+source .env
 ```
 
 ## Config

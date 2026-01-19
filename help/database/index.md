@@ -24,10 +24,10 @@ CREATE DATABASE demo_development OWNER demo_rust_loco_owner;
 GRANT ALL PRIVILEGES ON DATABASE demo_development TO demo_rust_loco_owner;
 ```
 
-Set an environment variable DB_URL with the database connection URL:
+Set an environment variable DATABASE_URL with the database connection URL:
 
 ```sh
-export DB_URL="postgres://demo_rust_loco_owner:secret@localhost:5432/demo_rust_loco_development"
+export DATABASE_URL="postgres://demo_rust_loco_owner:secret@localhost:5432/demo_rust_loco_development"
 ```
 
 ### Optional: create a database via environment variables
@@ -35,51 +35,76 @@ export DB_URL="postgres://demo_rust_loco_owner:secret@localhost:5432/demo_rust_l
 Generate database environment variables:
 
 ```sh
-DB_STEM=demo_rust_loco
-DB_NAME=${DB_STEM}_development
-DB_HOST=localhost
-DB_PORT=5432
-DB_OWNER_USERNAME=${DB_STEM}_owner
-DB_OWNER_PASSWORD=$(printf "%s\n" $(LC_ALL=C < /dev/urandom tr -dc '0-9a-f' | head -c32))
+DATABASE_STEM=demo_rust_loco
+DATABASE_STEP=development
+DATABASE_NAME=${DATABASE_STEM}_$DATABASE_STEP
+DATABASE_HOST=localhost
+DATABASE_PORT=5432
+DATABASE_OWNER_USERNAME=${DATABASE_STEM}_owner
+DATABASE_OWNER_PASSWORD=$(printf "%s\n" $(LC_ALL=C < /dev/urandom tr -dc '0-9a-f' | head -c32))
 ```
 
 Save:
 
 ```sh
 echo ".env" >> .gitignore
-mkdir .env
-cat <<- EOF > .env/development.env
-DB_STEM=$DB_STEM
-DB_NAME=$DB_NAME
-DB_HOST=$DB_HOST
-DB_PORT=$DB_PORT
-DB_OWNER_USERNAME=$DB_OWNER_USERNAME
-DB_OWNER_PASSWORD=$DB_OWNER_PASSWORD
-DB_URL=postgres://$DB_OWNER_USERNAME:$DB_OWNER_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME
+cat <<- EOF > .env
+DATABASE_STEM=$DATABASE_STEM
+DATABASE_STEP=$DATABASE_STEP
+DATABASE_NAME=$DATABASE_NAME
+DATABASE_HOST=$DATABASE_HOST
+DATABASE_PORT=$DATABASE_PORT
+DATABASE_OWNER_USERNAME=$DATABASE_OWNER_USERNAME
+DATABASE_OWNER_PASSWORD=$DATABASE_OWNER_PASSWORD
+DATABASE_URL=postgres://$DATABASE_OWNER_USERNAME:$DATABASE_OWNER_PASSWORD@$DATABASE_HOST:$DATABASE_PORT/$DATABASE_NAME
 EOF
-source .env/development.env
+source .env
 ```
 
 Generate database Postgres psql commands:
 
 ```sh
-cat <<- EOF > .env/development.sql
-CREATE ROLE ${DB_OWNER_USERNAME} WITH LOGIN ENCRYPTED PASSWORD '${DB_OWNER_PASSWORD}';
-CREATE DATABASE ${DB_NAME} OWNER ${DB_OWNER_USERNAME};
-GRANT ALL PRIVILEGES ON DATABASE ${DB_NAME} TO ${DB_OWNER_USERNAME};
+echo ".sql" >> .gitignore
+mkdir .sql
+cat <<- EOF > .sql/init.sql
+CREATE ROLE ${DATABASE_OWNER_USERNAME} WITH LOGIN ENCRYPTED PASSWORD '${DATABASE_OWNER_PASSWORD}';
+CREATE DATABASE ${DATABASE_NAME} OWNER ${DATABASE_OWNER_USERNAME};
+GRANT ALL PRIVILEGES ON DATABASE ${DATABASE_NAME} TO ${DATABASE_OWNER_USERNAME};
 EOF
-```
-
-Example output:
-
-```sql
-CREATE ROLE demo_rust_loco_owner WITH LOGIN ENCRYPTED PASSWORD '9edc9a66d6a8d46872d7bc9d80efb6c6';
-CREATE DATABASE demo_rust_loco_development OWNER demo_owner;
-GRANT ALL PRIVILEGES ON DATABASE demo_rust_loco_development TO demo_rust_loco_owner;
 ```
 
 Run:
 
 ```sh
-psql --host=localhost --username=postgres --password --file=.env/development.env
+psql "$DATABASE_URL" --file=.sql/init.sql
+```
+
+## Ongoing
+
+Set the environment:
+
+```sh
+export $(grep ^\\w .env | xargs -0)
+```
+
+Connect to the app databbase:
+
+```sh
+psql $DATABASE_URL
+```
+
+Or if you prefer manually, use these kinds of commands
+
+```sh
+cat .env/development.env
+psql --host=localhost -=port=5432 --username=demo_rust_loco_owner demo_rust_loco_development --password
+```
+
+
+### Delete users
+
+To delete users, such as for resetting the development authentication:
+
+```sql
+delete users;
 ```

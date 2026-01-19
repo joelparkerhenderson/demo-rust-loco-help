@@ -62,16 +62,36 @@ Create a new app via parameters:
 loco new --name demo_rust_loco --db postgres --bg async --assets serverside
 ```
 
-Build:
+### Rename directory
+
+We prefer renaming from snake case `demo_rust_loco` into kebab case `demo-rust-loco`
 
 ```sh
-cd demo_rust_loco
-cargo build
+mv demo_rust_loco demo-rust-loco
+cd demo-rust-loco
 ```
 
-Next:
+### Rename binary
+
+Edit `Cargo.toml`.
+
+Replace all matches from snake case `demo_rust_loco` into kebab case `demo-rust-loco`.
+
+### Build
+
+```sh
+cargo build --release
+target/release/demo-rust-loco-cli start
+```
+
+## Next
+
+Next steps:
 
 - [Start Loco](help/start/)
+- [Rename](help/rename/)
 - [Database setup](help/database/)
-- [Mailer setup](help/mailert/)
+- [Mailer setup](help/mailer/)
 - [Authentication setup](help/authentication/)
+- [Remote server setup](help/remote/)
+- [Deploy](help/deploy/)
